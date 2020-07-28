@@ -1,57 +1,73 @@
-import React, {Component} from 'react'
+import React, { Component } from "react";
 
 import {
-
     View,
     Text,
     TextInput,
-    TouchableOpacity
-
+    TouchableOpacity,
+    StyleSheet
 } from 'react-native'
 
-import style from './styles/mainStyles'
+import auth from '@react-native-firebase/auth';
 
 export default class App extends Component {
 
-    render () {
+    constructor (props) {
 
+        super(props)
+        this.state = {
+
+            senha: '',
+            email: '',
+            autenticado: 'nonono'
+
+        }
+
+    }
+
+    login = async () => {
+
+        await auth()
+        .signInWithEmailAndPassword(this.state.email, this.state.senha)
+        .then(() => {
+            this.setState({ autenticado: 'sisisisi' })
+        })
+        .catch(error => {
+            this.setState({ autenticado: 'kkkkkkk' })
+        });
+
+    }
+
+    render () {
+        
         return (
 
-            <View style = {style.container} >
+            <View>
 
-                <View style = {style.header} >
+                <TextInput
+                    placeholder = "email"
+                    onChangeText = { (email) => {this.setState({ email: email }) } }
+                    value = {this.state.email}
+                />
+                <TextInput
+                    placeholder = "senha"
+                    onChangeText = { (senha) => {this.setState({ email: senha }) } }
+                    value = {this.state.senha}
+                />
 
-                    <Text>Compras da Semana</Text>
+                <TouchableOpacity
 
-                </View>
+                    onPress = {this.login}
 
-                <View style = {style.main} >
+                >
 
-                    {/* aqui vai ter uma view generica para mensagens  */}
+                    <Text>login</Text>
 
-                </View>
+                </TouchableOpacity>
 
-                <View style = {style.viewTxtInput} >
-
-                    <TextInput 
-                        onChangeText = { () => {}}
-                        style = {style.txtInput}
-                        placeholder = "Digite sua mensagem"
-
-                    />
-
-                    <TouchableOpacity
-
-                        style = {style.send}
-
-                    >
-                        
-
-
-                    </TouchableOpacity>
-
-                </View>
-
+                {/* <Text>{this.state.senha}</Text> */}
+                <Text>{this.state.email}</Text>
+                <Text>{this.state.autenticado}</Text> 
 
             </View>
 
@@ -60,3 +76,4 @@ export default class App extends Component {
     }
 
 }
+
